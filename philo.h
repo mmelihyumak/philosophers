@@ -21,6 +21,7 @@ typedef struct s_mutex
 	long			time_to_eat;
 	long			time_to_sleep;
 	int				id;
+	int				time_to_repeat;
 	struct s_mutex	*next_mutex;
 }t_mutex;
 
@@ -30,7 +31,7 @@ void	create_philo(t_philo *philo);
 void	create_mutex(t_mutex *mutex);
 int		ft_atoi(const char *str);
 void	create_thread(t_philo *philo, t_mutex *mutex_t);
-void	*thread_f(void *mut);
+void	*thread_f(void *vargp);
 void	join_thread(t_philo *philo);
 long	ms_time();
 

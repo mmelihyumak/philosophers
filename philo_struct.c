@@ -51,4 +51,5 @@ void	create_mutex(t_mutex *mutex)
 	temp->next_mutex->time_to_die = temp->time_to_die;
 	temp->next_mutex->time_to_eat = temp->time_to_eat;
 	temp->next_mutex->time_to_sleep = temp->time_to_sleep;
+	temp->next_mutex->time_to_repeat = temp->time_to_repeat;
 }

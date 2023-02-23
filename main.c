@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 		mutex_t->time_to_die = ft_atoi(argv[2]);
 		mutex_t->time_to_eat = ft_atoi(argv[3]);
 		mutex_t->time_to_sleep = ft_atoi(argv[4]);
+		mutex_t->time_to_repeat = ft_atoi(argv[5]);
 		philo->id = 1;
 		mutex_t->id = 1;
 		i = 0;

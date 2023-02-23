@@ -21,11 +21,10 @@ void	*thread_f(void *vargp)
 	mutex_t = vargp;
 	pthread_mutex_lock(&mutex_t->mutex);
 	printf("%d has taken a fork\n", mutex_t->id);
+	pthread_mutex_unlock(&mutex_t->mutex);
 	printf("%d has taken a fork\n", mutex_t->id);
 	printf("%d is eating\n", mutex_t->id);
-	pthread_mutex_unlock(&mutex_t->mutex);
 	printf("%d is sleeping\n", mutex_t->id);
-	usleep(mutex_t->time_to_sleep);
 	printf("%d is thinking\n", mutex_t->id);
 	return (0);
 }
@@ -37,13 +36,19 @@ void	create_thread(t_philo *philo, t_mutex *mutex_t)
 
 	temp_philo = philo;
 	temp_mutex_t = mutex_t;
-	while (temp_philo)
+	while (mutex_t->time_to_repeat-- >0)
 	{
-		pthread_create(&temp_philo->thread_id, NULL, &thread_f, (void *) temp_mutex_t);
-		temp_philo = temp_philo->next_philo;
-		temp_mutex_t = temp_mutex_t->next_mutex;
-		usleep(mutex_t->time_to_eat);
+		while (temp_philo)
+		{
+			pthread_create(&temp_philo->thread_id, NULL, &thread_f, (void *) temp_mutex_t);
+			usleep(3000000);
+			temp_philo = temp_philo->next_philo;
+			temp_mutex_t = temp_mutex_t->next_mutex;
+		}
+		temp_philo = philo;
+		temp_mutex_t = mutex_t;
 	}
+
 }
 
 void	join_thread(t_philo *philo)
