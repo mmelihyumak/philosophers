@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muyumak <muyumak@student.42>               +#+  +:+       +#+        */
+/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 19:42:43 by muyumak           #+#    #+#             */
-/*   Updated: 2023/02/22 19:42:43 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/02/25 00:28:21 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	main(int argc, char **argv)
 {
-	t_philo *philo;
-	t_mutex	*temp;
-	t_mutex	*mutex_t;
+	t_philo		*philo;
+	t_mutex		*temp;
+	t_mutex		*mutex_t;
+	t_philmut	*philmut;
 	int	i;
 
 	ms_time();
@@ -39,6 +40,9 @@ int	main(int argc, char **argv)
 			create_mutex(mutex_t);
 		}
 	}
+	philmut = malloc(sizeof(t_philmut));
+	philmut->mutex = mutex_t;
+	philmut->philo = philo;
 	temp = mutex_t;
 	/*while (temp)
 	{
@@ -50,7 +54,7 @@ int	main(int argc, char **argv)
 		pthread_mutex_init(&temp->mutex, NULL);
 		temp = temp->next_mutex;
 	}
-	create_thread(philo, mutex_t);
+	create_thread(philmut);
 	join_thread(philo);
 	return (0);
 }

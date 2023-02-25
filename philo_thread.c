@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_thread.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muyumak <muyumak@student.42>               +#+  +:+       +#+        */
+/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 02:26:35 by muyumak           #+#    #+#             */
-/*   Updated: 2023/02/23 02:26:35 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/02/25 03:43:26 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,40 @@
 
 void	*thread_f(void *vargp)
 {
-	static int	time;
-	int	x;
-	t_mutex	*mutex_t;
+	t_philmut	*philmut;
 
-	mutex_t = vargp;
-	pthread_mutex_lock(&mutex_t->mutex);
-	printf("%d has taken a fork\n", mutex_t->id);
-	pthread_mutex_unlock(&mutex_t->mutex);
-	printf("%d has taken a fork\n", mutex_t->id);
-	printf("%d is eating\n", mutex_t->id);
-	printf("%d is sleeping\n", mutex_t->id);
-	printf("%d is thinking\n", mutex_t->id);
+	philmut = vargp;
+	pthread_mutex_lock(&philmut->mutex->mutex);
+	printf("%d has taken a fork\n", philmut->temp_philo->id);
+	pthread_mutex_unlock(&philmut->mutex->mutex);
+	printf("%d has taken a fork\n", philmut->temp_philo->id);
+	printf("%d is eating\n", philmut->temp_philo->id);
+	usleep(philmut->mutex->time_to_sleep * 1000);
+	printf("%d is sleeping\n", philmut->temp_philo->id);
+	usleep(philmut->mutex->time_to_sleep * 1000);
+	printf("%d is thinking\n", philmut->temp_philo->id);
 	return (0);
 }
 
-void	create_thread(t_philo *philo, t_mutex *mutex_t)
+void	create_thread(t_philmut *philmut)
 {
 	t_philo	*temp_philo;
 	t_mutex	*temp_mutex_t;
 
-	temp_philo = philo;
-	temp_mutex_t = mutex_t;
-	while (mutex_t->time_to_repeat-- >0)
+	philmut->temp_philo = philmut->philo;
+	philmut->temp_mutex = philmut->mutex;
+	while (philmut->mutex->time_to_repeat-- >0)
 	{
-		while (temp_philo)
+		while (philmut->temp_philo)
 		{
-			pthread_create(&temp_philo->thread_id, NULL, &thread_f, (void *) temp_mutex_t);
-			usleep(3000000);
-			temp_philo = temp_philo->next_philo;
-			temp_mutex_t = temp_mutex_t->next_mutex;
+			pthread_create(&philmut->temp_philo->thread_id, NULL, &thread_f, philmut);
+			usleep(500);
+			philmut->temp_philo = philmut->temp_philo->next_philo;
+			philmut->temp_mutex = philmut->temp_mutex->next_mutex;
 		}
-		temp_philo = philo;
-		temp_mutex_t = mutex_t;
+		philmut->temp_philo = philmut->philo;
+		philmut->temp_mutex = philmut->mutex;
 	}
-
 }
 
 void	join_thread(t_philo *philo)

@@ -25,13 +25,21 @@ typedef struct s_mutex
 	struct s_mutex	*next_mutex;
 }t_mutex;
 
+typedef struct s_philmut
+{
+	t_mutex	*mutex;
+	t_philo	*philo;
+	t_mutex	*temp_mutex;
+	t_philo	*temp_philo;
+}t_philmut;
+
 t_philo	*find_last_philo(t_philo *philo);
 t_mutex	*find_last_mutex(t_mutex *mutex);
 void	create_philo(t_philo *philo);
 void	create_mutex(t_mutex *mutex);
 int		ft_atoi(const char *str);
-void	create_thread(t_philo *philo, t_mutex *mutex_t);
-void	*thread_f(void *vargp);
+void	create_thread(t_philmut *philmut);
+void	*thread_f(void *philmut);
 void	join_thread(t_philo *philo);
 long	ms_time();
 
