@@ -1,4 +1,4 @@
-SRCS		=		main.c philo_thread.c philo_struct.c philo_time.c ft_atoi.c
+SRCS		=		main.c ft_atoi.c philo_struct.c philo_thread.c philo_time.c
 
 OBJS		=		$(SRCS:.c=.o)
 
@@ -22,4 +22,3 @@ fclean:				clean
 re:					fclean $(NAME)
 
 .PHONY:				all clean fclean re
-

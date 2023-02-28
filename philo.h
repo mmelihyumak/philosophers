@@ -1,46 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/27 23:34:07 by muyumak           #+#    #+#             */
+/*   Updated: 2023/02/28 05:03:52 by muyumak          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <sys/time.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <sys/time.h>
 
-typedef struct s_philo
+typedef struct	s_philo
 {
-	pthread_t		thread_id;
+	pthread_t		philo_t;
 	int				id;
+	pthread_mutex_t	*left;
+	pthread_mutex_t	*right;
+	struct s_rules	*rules;
+	long long	last_meal;
+	int			is_dead;
 	struct s_philo	*next_philo;
 }t_philo;
 
-typedef struct s_mutex
+typedef struct	s_rules
 {
-	pthread_mutex_t	mutex;
-	long			time_to_die;
-	long			time_to_eat;
-	long			time_to_sleep;
-	int				id;
-	int				time_to_repeat;
-	struct s_mutex	*next_mutex;
-}t_mutex;
+	int				number_of_philo;
+	long long	time_to_die;
+	long long	time_to_eat;
+	long long	time_to_sleep;
+	int				repeat_lifecycle;
+	long long	start_time;
+	long long	current_time;
+	pthread_mutex_t	**forks;
+	t_philo			**philos;
+}t_rules;
 
-typedef struct s_philmut
-{
-	t_mutex	*mutex;
-	t_philo	*philo;
-	t_mutex	*temp_mutex;
-	t_philo	*temp_philo;
-}t_philmut;
-
-t_philo	*find_last_philo(t_philo *philo);
-t_mutex	*find_last_mutex(t_mutex *mutex);
-void	create_philo(t_philo *philo);
-void	create_mutex(t_mutex *mutex);
-int		ft_atoi(const char *str);
-void	create_thread(t_philmut *philmut);
-void	*thread_f(void *philmut);
-void	join_thread(t_philo *philo);
-long	ms_time();
+int				ft_atoi(const char *str);
+void			create_thread(t_rules *rules);
+void			*routine(void *vargp);
+t_philo			*find_last_philo(t_philo *philo);
+void			link_philos(t_philo *philo, t_rules *rules);
+t_philo			**seperate_philos(t_philo *philo, t_rules *rules);
+long long		get_time();
 
 #endif

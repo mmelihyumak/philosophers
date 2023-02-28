@@ -5,59 +5,68 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/23 02:26:35 by muyumak           #+#    #+#             */
-/*   Updated: 2023/02/25 03:43:26 by muyumak          ###   ########.fr       */
+/*   Created: 2023/02/27 23:47:29 by muyumak           #+#    #+#             */
+/*   Updated: 2023/02/28 05:07:08 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*thread_f(void *vargp)
+void	*routine(void *vargp)
 {
-	t_philmut	*philmut;
+	t_philo	*philo;
+	t_rules	*rules;
 
-	philmut = vargp;
-	pthread_mutex_lock(&philmut->mutex->mutex);
-	printf("%d has taken a fork\n", philmut->temp_philo->id);
-	pthread_mutex_unlock(&philmut->mutex->mutex);
-	printf("%d has taken a fork\n", philmut->temp_philo->id);
-	printf("%d is eating\n", philmut->temp_philo->id);
-	usleep(philmut->mutex->time_to_sleep * 1000);
-	printf("%d is sleeping\n", philmut->temp_philo->id);
-	usleep(philmut->mutex->time_to_sleep * 1000);
-	printf("%d is thinking\n", philmut->temp_philo->id);
+	philo = vargp;
+	rules = philo->rules;
+	rules->current_time = get_time() - rules->start_time;
+	if (rules->current_time - philo->last_meal > rules->time_to_die + 10)
+	{
+		printf("%lld %d died\n", rules->current_time, philo->id);
+		philo->is_dead = 1;
+	}
+	pthread_mutex_lock(philo->right);
+	pthread_mutex_lock(philo->left);
+	printf("%lld %d has taken a fork\n", rules->current_time, philo->id);
+	printf("%lld %d has taken a fork\n", rules->current_time, philo->id);
+	printf("%lld %d is eating\n", philo->rules->current_time, philo->id);
+	usleep(rules->time_to_eat * 1000);
+	pthread_mutex_unlock(philo->right);
+	pthread_mutex_unlock(philo->left);
+	rules->current_time = get_time() - rules->start_time;
+	philo->last_meal = rules->current_time;
+	printf("%lld %d is sleeping\n", philo->rules->current_time, philo->id);
+	usleep(rules->time_to_sleep * 1000);
+	rules->current_time = get_time() - rules->start_time;
+	printf("%lld %d is thinking\n", rules->current_time, philo->id);
 	return (0);
 }
 
-void	create_thread(t_philmut *philmut)
+void	create_thread(t_rules *rules)
 {
-	t_philo	*temp_philo;
-	t_mutex	*temp_mutex_t;
+	int	i;
+	int	l;
 
-	philmut->temp_philo = philmut->philo;
-	philmut->temp_mutex = philmut->mutex;
-	while (philmut->mutex->time_to_repeat-- >0)
+	i = 0;
+	l = 0;
+	while (1)
 	{
-		while (philmut->temp_philo)
+		while (i < rules->number_of_philo)
 		{
-			pthread_create(&philmut->temp_philo->thread_id, NULL, &thread_f, philmut);
-			usleep(500);
-			philmut->temp_philo = philmut->temp_philo->next_philo;
-			philmut->temp_mutex = philmut->temp_mutex->next_mutex;
+			pthread_create(&rules->philos[i]->philo_t, NULL, &routine, rules->philos[i]);
+			if (rules->philos[i]->is_dead)
+				break;
+			i++;
 		}
-		philmut->temp_philo = philmut->philo;
-		philmut->temp_mutex = philmut->mutex;
-	}
-}
-
-void	join_thread(t_philo *philo)
-{
-	t_philo	*temp;
-
-	temp = philo;
-	while (temp)
-	{
-		pthread_join(temp->thread_id, NULL);
-		temp = temp->next_philo;
+		i = 0;
+		while (i < rules->number_of_philo)
+		{
+			pthread_join(rules->philos[i]->philo_t, NULL);
+			i++;
+		}
+		i = 0;
+		l++;
+		if (l == rules->repeat_lifecycle)
+			break;
 	}
 }

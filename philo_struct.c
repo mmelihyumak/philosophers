@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/23 02:26:56 by muyumak           #+#    #+#             */
-/*   Updated: 2023/02/24 22:16:14 by muyumak          ###   ########.fr       */
+/*   Created: 2023/02/28 00:01:01 by muyumak           #+#    #+#             */
+/*   Updated: 2023/02/28 03:32:40 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,45 @@
 t_philo	*find_last_philo(t_philo *philo)
 {
 	t_philo	*temp;
-
+	
 	temp = philo;
 	while (temp->next_philo)
 		temp = temp->next_philo;
 	return (temp);
 }
 
-t_mutex	*find_last_mutex(t_mutex *mutex)
+void	link_philos(t_philo *philo, t_rules *rules)
 {
-	t_mutex	*temp;
+	t_philo	*temp;
+	t_philo	*last_philo;
+	int		i;
 
-	temp = mutex;
-	while (temp->next_mutex)
-		temp = temp->next_mutex;
-	return (temp);
+	i = 0;
+	temp = philo;
+	while (i < rules->number_of_philo - 1)
+	{
+		last_philo = find_last_philo(philo);
+		last_philo->next_philo = malloc(sizeof(t_philo));
+		last_philo->next_philo->id = last_philo->id + 1;
+		i++;
+	}
 }
 
-void	create_philo(t_philo *philo)
+t_philo	**seperate_philos(t_philo *philo, t_rules *rules)
 {
-	t_philo		*temp;
+	t_philo	**philos;
+	t_philo	*temp;
+	int		i;
 
-	temp = find_last_philo(philo);
-	temp->next_philo = malloc(sizeof(t_philo));
-	temp->next_philo->id = temp->id + 1;
-}
-
-void	create_mutex(t_mutex *mutex)
-{
-	t_mutex		*temp;
-
-	temp = find_last_mutex(mutex);
-	temp->next_mutex = malloc(sizeof(t_mutex));
-	temp->next_mutex->id = temp->id + 1;
-	temp->next_mutex->time_to_die = temp->time_to_die;
-	temp->next_mutex->time_to_eat = temp->time_to_eat;
-	temp->next_mutex->time_to_sleep = temp->time_to_sleep;
-	temp->next_mutex->time_to_repeat = temp->time_to_repeat;
+	temp = philo;
+	philos = malloc(sizeof(t_philo *) * rules->number_of_philo);
+	i = 0;
+	while (temp)
+	{
+		philos[i] = temp;
+		temp = temp->next_philo;
+		philos[i]->rules = rules;
+		i++;
+	}
+	return (philos);
 }
