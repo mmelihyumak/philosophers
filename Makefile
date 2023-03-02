@@ -1,4 +1,4 @@
-SRCS		=		main.c ft_atoi.c philo_struct.c philo_thread.c philo_time.c
+SRCS		=		main.c ft_atoi.c philo_struct.c philo_thread.c philo_time.c philo_dead.c
 
 OBJS		=		$(SRCS:.c=.o)
 

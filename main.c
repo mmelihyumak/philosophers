@@ -17,7 +17,7 @@ int	main(int argc, char **argv)
 	t_rules	*rules;
 	t_philo	*philo, *temp;
 	int		i;
-	
+
 	if (argc < 5 || argc > 6)
 	{
 		printf("Invalid number of arguments\n");
@@ -40,19 +40,19 @@ int	main(int argc, char **argv)
 		printf("%d\n", temp->id);
 		temp = temp->next_philo;
 	}*/
+	pthread_mutex_init(&rules->is_dead, NULL);
 	rules->philos = seperate_philos(philo, rules);
 	i = 0;
 	while (i < rules->number_of_philo)
 	{
 		rules->forks[i] = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(rules->forks[i], NULL);
-		
 		i++;
 	}
 	i = 0;
 	while (i < rules->number_of_philo)
 	{
-		
+
 		rules->philos[i]->right = rules->forks[i];
 		if (i != rules->number_of_philo - 1)
 			rules->philos[i]->left = rules->forks[i + 1];
@@ -68,7 +68,10 @@ int	main(int argc, char **argv)
 		i++;
 	}*/
 	//printf("||||||||||||||||||||||||||\n");
-	create_thread(rules);
+	if (!create_thread(rules))
+		return (0);
+	//if (!launch_dead_check(rules))
+	//	return (0);
 	//system("leaks philo");
 	return (0);
 }
