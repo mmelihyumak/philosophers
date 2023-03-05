@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+int	wait_philo(t_philo *philo, long long wait_time, int flag)
+{
+	while (get_time() < wait_time)
+	{
+		if (!death_control(philo->rules, philo->id, flag))
+			return (0);
+		usleep(100);
+	}
+	if (flag == 0)
+		philo->last_meal = get_time() - philo->rules->start_time;
+	return (1);
+}
+
 long long	get_time()
 {
 	struct timeval	tv;

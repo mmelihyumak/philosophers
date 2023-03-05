@@ -16,18 +16,14 @@ int	main(int argc, char **argv)
 {
 	t_rules	*rules;
 
+	if (argc < 5 || argc > 6)
+		return (0);
 	rules = malloc(sizeof(t_rules));
 	rules->number_of_philo = ft_atoi(argv[1]);
 	create_philo(rules, argv);
 	create_mutex(rules);
 	init_mutexes(rules);
-	int i = -1;
-	while (++i < rules->number_of_philo)
-	{
-		printf("left : %p %d\n", rules->philos[i].left_fork, rules->philos[i].id);
-		printf("right: %p %d\n", rules->philos[i].right_fork, rules->philos[i].id);
-	}
-	create_thread(rules);
-//	system("leaks philo");
+	if (!create_thread(rules))
+		return (0);
 	return (0);
 }

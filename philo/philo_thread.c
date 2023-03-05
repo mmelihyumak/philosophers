@@ -16,19 +16,24 @@ void	*routine(void *vargp)
 {
 	t_philo	*philo;
 	t_rules	*rules;
-	
+
 	philo = (t_philo *) vargp;
 	rules = philo->rules;
 	pthread_mutex_lock(philo->right_fork);
 	pthread_mutex_lock(philo->left_fork);
+	philo->is_eating = 1;
 	printf("%lld %d has taken a fork\n", get_time() - rules->start_time, philo->id);
 	printf("%lld %d has taken a fork\n", get_time() - rules->start_time, philo->id);
-	printf("%lld %d is eating\n", get_time() - philo->rules->start_time, philo->id);
-	usleep(rules->time_to_eat * 1000);
+	printf("%lld %d is eating\n", get_time() - rules->start_time, philo->id);
+	philo->last_meal = get_time() - rules->start_time;
+	if (!wait_philo(philo, rules->time_to_eat + get_time(), 0))
+		return (0);
+	philo->is_eating = 0;
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
 	printf("%lld %d is sleeping\n", get_time() - rules->start_time, philo->id);
-	usleep(rules->time_to_sleep * 1000);
+	if (!wait_philo(philo, rules->time_to_sleep + get_time(), 1))
+		return (0);
 	printf("%lld %d is thinking\n", get_time() - rules->start_time, philo->id);
 	return (vargp);
 }
@@ -52,6 +57,13 @@ int	create_thread(t_rules *rules)
 	while (++i < rules->number_of_philo)
 	{
 		pthread_join(rules->philos[i].thread_id, &take_returned);
+		if (take_returned == 0)
+		{
+			i = -1;
+			while (++i < rules->number_of_philo)
+				pthread_detach(rules->philos[i].thread_id);
+			return (0);
+		}
 	}
-	return (0);
+	return (1);
 }
