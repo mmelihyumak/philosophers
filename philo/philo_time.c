@@ -14,14 +14,16 @@
 
 int	wait_philo(t_philo *philo, long long wait_time, int flag)
 {
+	pthread_mutex_lock(&philo->rules->death_mutex);
 	while (get_time() < wait_time)
 	{
 		if (!death_control(philo->rules, philo->id, flag))
 			return (0);
-		usleep(100);
 	}
 	if (flag == 0)
 		philo->last_meal = get_time() - philo->rules->start_time;
+	//usleep(50);
+	pthread_mutex_unlock(&philo->rules->death_mutex);
 	return (1);
 }
 

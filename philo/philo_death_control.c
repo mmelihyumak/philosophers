@@ -16,7 +16,7 @@ int	death_control(t_rules *rules, int id, int flag)
 {
 	int	i;
 
-	pthread_mutex_lock(&rules->death_mutex);
+	//pthread_mutex_lock(&rules->death_mutex);
 	i = -1;
 	while (++i < rules->number_of_philo)
 	{
@@ -25,6 +25,9 @@ int	death_control(t_rules *rules, int id, int flag)
 			if (id != i + 1 && get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
 			{
 				printf("%lld %d is died\n", get_time() - rules->start_time, rules->philos[i].id);
+				i = -1;
+				while (++i < rules->number_of_philo)
+					pthread_detach(rules->philos[i].thread_id);
 				return (0);
 			}
 		}
@@ -33,10 +36,13 @@ int	death_control(t_rules *rules, int id, int flag)
 			if (get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
 			{
 				printf("%lld %d is died\n", get_time() - rules->start_time, rules->philos[i].id);
+				i = -1;
+				while (++i < rules->number_of_philo)
+					pthread_detach(rules->philos[i].thread_id);
 				return (0);
 			}
 		}
 	}
-	pthread_mutex_unlock(&rules->death_mutex);
+	//pthread_mutex_unlock(&rules->death_mutex);
 	return (1);
 }

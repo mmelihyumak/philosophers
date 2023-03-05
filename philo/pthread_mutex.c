@@ -15,7 +15,7 @@
 int	create_mutex(t_rules *rules)
 {
 	int	i;
-	
+
 	i = -1;
 	while (++i < rules->number_of_philo)
 	{
@@ -28,7 +28,7 @@ int	init_mutexes(t_rules *rules)
 {
 	int	i;
 
-	
+
 	i = -1;
 	while (++i < rules->number_of_philo)
 	{

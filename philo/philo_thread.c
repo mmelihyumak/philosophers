@@ -41,29 +41,26 @@ void	*routine(void *vargp)
 int	create_thread(t_rules *rules)
 {
 	int	i;
+	int	k;
 	void	*take_returned;
 
 	i = -1;
 	while (++i < rules->number_of_philo)
-	{
 		pthread_mutex_init(&rules->forks[i], NULL);
-	}
-	i = -1;
-	while (++i < rules->number_of_philo)
+	pthread_mutex_init(&rules->death_mutex, NULL);
+	k = 0;
+	while (1)
 	{
-		pthread_create(&rules->philos[i].thread_id, NULL, &routine, (void *) &rules->philos[i]);
-	}
-	i = -1;
-	while (++i < rules->number_of_philo)
-	{
-		pthread_join(rules->philos[i].thread_id, &take_returned);
-		if (take_returned == 0)
-		{
-			i = -1;
-			while (++i < rules->number_of_philo)
-				pthread_detach(rules->philos[i].thread_id);
-			return (0);
-		}
+		i = -1;
+		while (++i < rules->number_of_philo)
+			pthread_create(&rules->philos[i].thread_id, NULL, &routine, (void *) &rules->philos[i]);
+		i = -1;
+		while (++i < rules->number_of_philo)
+			pthread_join(rules->philos[i].thread_id, &take_returned);
+		i = 0;
+		k++;
+		if (k == rules->time_to_repeat)
+			break;
 	}
 	return (1);
 }

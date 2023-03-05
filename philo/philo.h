@@ -54,5 +54,8 @@ void		*routine(void *vargp);
 long long	get_time();
 int			death_control(t_rules *rules, int id, int flag);
 int			wait_philo(t_philo *philo, long long wait_time, int flag);
+int			check_numbers(char **argv);
+int			ft_isdigit(int c);
+int			check_zero(char **argv);
 
 #endif
