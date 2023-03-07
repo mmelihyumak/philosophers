@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 00:13:52 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 07:12:30 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/07 07:14:49 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,39 @@ void	*routine(void *vargp)
 	rules = philo->rules;
 	pthread_mutex_lock(philo->right_fork);
 	pthread_mutex_lock(philo->left_fork);
-	philo->is_eating = 1;
-	printf("%lld %d has taken a fork\n", get_time() - rules->start_time, philo->id);
-	printf("%lld %d has taken a fork\n", get_time() - rules->start_time, philo->id);
-	printf("%lld %d is eating\n", get_time() - rules->start_time, philo->id);
-	philo->last_meal = get_time() - rules->start_time;
-	if (!wait_philo(philo, rules->time_to_eat + get_time(), 0))
-		return (0);
-	philo->is_eating = 0;
-	pthread_mutex_unlock(philo->right_fork);
+	print_state(philo, "has taken a fork", 0);
+	print_state(philo, "has taken a fork", 0);
+	print_state(philo, "is eating", 0);
+	if (rules->checking_death == 0)
+	{
+		rules->checking_death = 1;
+		if (!wait_philo(philo, rules->time_to_eat + get_time(), 0))
+		{
+			rules->death = 1;
+			return (NULL);
+		}
+		rules->checking_death = 0;
+	}
+	else
+		if (!wait_eating(philo, rules->time_to_sleep + get_time()))
+			return (0);
 	pthread_mutex_unlock(philo->left_fork);
-	printf("%lld %d is sleeping\n", get_time() - rules->start_time, philo->id);
-	if (!wait_philo(philo, rules->time_to_sleep + get_time(), 1))
-		return (0);
-	printf("%lld %d is thinking\n", get_time() - rules->start_time, philo->id);
+	pthread_mutex_unlock(philo->right_fork);
+	print_state(philo, "is sleeping", 0);
+	if (rules->checking_death == 0)
+	{
+		rules->checking_death = 1;
+		if (!wait_philo(philo, rules->time_to_sleep + get_time(), 1))
+		{
+			rules->death = 1;
+			return (NULL);
+		}
+		rules->checking_death = 0;
+	}
+	else
+		if (!wait_sleeping(philo, rules->time_to_sleep + get_time()))
+			return (0);
+	print_state(philo, "is thinking", 0);
 	return (vargp);
 }
 
@@ -42,21 +61,35 @@ int	create_thread(t_rules *rules)
 {
 	int	i;
 	int	k;
-	void	*take_returned;
+	void	*retrieve;
 
+	k = 0;
+	create_mutex(rules);
+	init_mutexes(rules);
 	i = -1;
 	while (++i < rules->number_of_philo)
 		pthread_mutex_init(&rules->forks[i], NULL);
-	pthread_mutex_init(&rules->death_mutex, NULL);
-	k = 0;
 	while (1)
 	{
 		i = -1;
 		while (++i < rules->number_of_philo)
+		{
 			pthread_create(&rules->philos[i].thread_id, NULL, &routine, (void *) &rules->philos[i]);
+			usleep(100);
+		}
 		i = -1;
 		while (++i < rules->number_of_philo)
-			pthread_join(rules->philos[i].thread_id, &take_returned);
+		{
+			pthread_join(rules->philos[i].thread_id, &retrieve);
+			if (!retrieve)
+			{
+				i = -1; 
+				while (++i < rules->number_of_philo)
+					pthread_detach(rules->philos[i].thread_id);
+				return (0);
+			}
+			usleep(100);
+		}
 		i = 0;
 		k++;
 		if (k == rules->time_to_repeat)

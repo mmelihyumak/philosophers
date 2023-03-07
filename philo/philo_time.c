@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 02:58:28 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 04:34:57 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/07 07:16:08 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 
 int	wait_philo(t_philo *philo, long long wait_time, int flag)
 {
-	pthread_mutex_lock(&philo->rules->death_mutex);
 	while (get_time() < wait_time)
 	{
 		if (!death_control(philo->rules, philo->id, flag))
 			return (0);
+		usleep(50);
 	}
 	if (flag == 0)
 		philo->last_meal = get_time() - philo->rules->start_time;
-	//usleep(50);
-	pthread_mutex_unlock(&philo->rules->death_mutex);
 	return (1);
 }
 
@@ -33,4 +31,37 @@ long long	get_time()
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+int	wait_eating(t_philo *philo, long long wait_time)
+{
+	while (get_time() < wait_time)
+	{
+		philo->last_meal = get_time() - philo->rules->start_time;
+		if (philo->rules->death == 1)
+			return (0);
+		usleep(50);
+	}
+	philo->last_meal = get_time() - philo->rules->start_time;
+	return (1);
+}
+
+int	print_state(t_philo *philo, char *state, int flag)
+{
+	pthread_mutex_lock(&philo->rules->print_mutex);
+	printf("%lld %d %s\n", get_time() - philo->rules->start_time, philo->id, state);
+	pthread_mutex_unlock(&philo->rules->print_mutex);
+	return (1);
+}
+
+int	wait_sleeping(t_philo *philo, long long wait_time)
+{
+	while (get_time() < wait_time)
+	{
+		if (philo->rules->death == 1)
+			return (0);
+		usleep(50);
+	}
+	philo->last_meal = get_time() - philo->rules->start_time;
+	return (1);
 }

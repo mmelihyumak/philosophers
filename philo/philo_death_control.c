@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_death_control.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muyumak <muyumak@student.42>               +#+  +:+       +#+        */
+/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:20:49 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 19:20:49 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/07 07:14:35 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	death_control(t_rules *rules, int id, int flag)
 {
 	int	i;
 
-	//pthread_mutex_lock(&rules->death_mutex);
 	i = -1;
 	while (++i < rules->number_of_philo)
 	{
@@ -24,10 +23,9 @@ int	death_control(t_rules *rules, int id, int flag)
 		{
 			if (id != i + 1 && get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
 			{
-				printf("%lld %d is died\n", get_time() - rules->start_time, rules->philos[i].id);
-				i = -1;
-				while (++i < rules->number_of_philo)
-					pthread_detach(rules->philos[i].thread_id);
+				rules->philos[i].is_dead = 1;
+				pthread_mutex_destroy(rules->death_mutex);
+				print_state(&rules->philos[i], "is died", 1);
 				return (0);
 			}
 		}
@@ -35,14 +33,12 @@ int	death_control(t_rules *rules, int id, int flag)
 		{
 			if (get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
 			{
-				printf("%lld %d is died\n", get_time() - rules->start_time, rules->philos[i].id);
-				i = -1;
-				while (++i < rules->number_of_philo)
-					pthread_detach(rules->philos[i].thread_id);
+				rules->philos[i].is_dead = 1;
+				pthread_mutex_destroy(rules->death_mutex);
+				print_state(&rules->philos[i], "is died", 1);
 				return (0);
 			}
 		}
 	}
-	//pthread_mutex_unlock(&rules->death_mutex);
 	return (1);
 }

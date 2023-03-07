@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:18 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 07:13:08 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/07 00:40:10 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	main(int argc, char **argv)
 {
 	t_rules	*rules;
+	int	i;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -31,9 +32,13 @@ int	main(int argc, char **argv)
 	rules = malloc(sizeof(t_rules));
 	rules->number_of_philo = ft_atoi(argv[1]);
 	create_philo(rules, argv);
-	create_mutex(rules);
-	init_mutexes(rules);
 	if (!create_thread(rules))
+	{
+		i = -1;
+		while (++i < rules->number_of_philo)
+			pthread_mutex_destroy(&rules->forks[i]);
+		pthread_mutex_destroy(rules->death_mutex);
 		return (0);
+	}
 	return (0);
 }

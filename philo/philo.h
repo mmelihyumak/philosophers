@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:48 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 07:11:38 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/07 07:11:02 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@ typedef	struct  s_rules
 	long long		time_to_sleep;
 	long long		start_time;
 	int				time_to_repeat;
+	int				checking_death;
+	int				death;
+	int				death_id;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	death_mutex;
+	pthread_mutex_t	*death_mutex;
+	pthread_mutex_t	print_mutex;
 	t_philo			*philos;
 }t_rules;
 
@@ -57,5 +61,8 @@ int			wait_philo(t_philo *philo, long long wait_time, int flag);
 int			check_numbers(char **argv);
 int			ft_isdigit(int c);
 int			check_zero(char **argv);
+int			wait_eating(t_philo *philo, long long wait_time);
+int			wait_sleeping(t_philo *philo, long long wait_time);
+int			print_state(t_philo *philo, char *state, int flag);
 
 #endif
