@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:18 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/07 00:40:10 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/08 07:54:45 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	main(int argc, char **argv)
 {
 	t_rules	*rules;
-	int	i;
+	int		i;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -40,5 +40,6 @@ int	main(int argc, char **argv)
 		pthread_mutex_destroy(rules->death_mutex);
 		return (0);
 	}
+	//system("leaks philo");
 	return (0);
 }

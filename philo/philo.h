@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:48 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/07 07:11:02 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/08 01:43:33 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_philo
 	struct s_rules	*rules;
 }t_philo;
 
-typedef	struct  s_rules
+typedef struct s_rules
 {
 	int				number_of_philo;
 	long long		time_to_die;
@@ -48,14 +48,13 @@ typedef	struct  s_rules
 	t_philo			*philos;
 }t_rules;
 
-
 int			ft_atoi(const char *str);
 int			create_philo(t_rules *rules, char **argv);
 int			create_mutex(t_rules *rules);
 int			create_thread(t_rules *rules);
 int			init_mutexes(t_rules *rules);
 void		*routine(void *vargp);
-long long	get_time();
+long long	get_time(void);
 int			death_control(t_rules *rules, int id, int flag);
 int			wait_philo(t_philo *philo, long long wait_time, int flag);
 int			check_numbers(char **argv);
@@ -64,5 +63,8 @@ int			check_zero(char **argv);
 int			wait_eating(t_philo *philo, long long wait_time);
 int			wait_sleeping(t_philo *philo, long long wait_time);
 int			print_state(t_philo *philo, char *state, int flag);
+int			eating(t_philo *philo);
+int			launch(t_rules *rules);
+int			control(t_rules *rules, int id, int flag, int i);
 
 #endif

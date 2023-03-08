@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_error.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muyumak <muyumak@student.42>               +#+  +:+       +#+        */
+/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 22:14:09 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/05 22:14:09 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/08 01:46:33 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	check_zero(char **argv)
 	i = 0;
 	while (argv[++i])
 	{
-		if (ft_atoi(argv[i]) == 0)
+		if (ft_atoi(argv[i]) <= 0)
 		{
 			printf("Invalid argument\n");
 			return (0);

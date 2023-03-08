@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:20:49 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/07 07:14:35 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/08 01:40:35 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,26 +18,33 @@ int	death_control(t_rules *rules, int id, int flag)
 
 	i = -1;
 	while (++i < rules->number_of_philo)
+		if (!control(rules, id, flag, i))
+			return (0);
+	return (1);
+}
+
+int	control(t_rules *rules, int id, int flag, int i)
+{
+	if (flag == 0 && !rules->philos[i].is_eating)
 	{
-		if (flag == 0 && !rules->philos[i].is_eating)
+		if (id != i + 1 && get_time() - rules->start_time
+			- rules->philos[i].last_meal > rules->time_to_die)
 		{
-			if (id != i + 1 && get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
-			{
-				rules->philos[i].is_dead = 1;
-				pthread_mutex_destroy(rules->death_mutex);
-				print_state(&rules->philos[i], "is died", 1);
-				return (0);
-			}
+			rules->philos[i].is_dead = 1;
+			pthread_mutex_destroy(rules->death_mutex);
+			print_state(&rules->philos[i], "is died", 1);
+			return (0);
 		}
-		else if (flag == 1 && !rules->philos[i].is_eating)
+	}
+	else if (flag == 1 && !rules->philos[i].is_eating)
+	{
+		if (get_time() - rules->start_time - rules->philos[i].last_meal
+			> rules->time_to_die)
 		{
-			if (get_time() - rules->start_time - rules->philos[i].last_meal > rules->time_to_die)
-			{
-				rules->philos[i].is_dead = 1;
-				pthread_mutex_destroy(rules->death_mutex);
-				print_state(&rules->philos[i], "is died", 1);
-				return (0);
-			}
+			rules->philos[i].is_dead = 1;
+			pthread_mutex_destroy(rules->death_mutex);
+			print_state(&rules->philos[i], "is died", 1);
+			return (0);
 		}
 	}
 	return (1);

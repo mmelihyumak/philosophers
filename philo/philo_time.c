@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 02:58:28 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/07 07:16:08 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/08 06:51:49 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	wait_philo(t_philo *philo, long long wait_time, int flag)
 	return (1);
 }
 
-long long	get_time()
+long long	get_time(void)
 {
 	struct timeval	tv;
 
@@ -49,7 +49,8 @@ int	wait_eating(t_philo *philo, long long wait_time)
 int	print_state(t_philo *philo, char *state, int flag)
 {
 	pthread_mutex_lock(&philo->rules->print_mutex);
-	printf("%lld %d %s\n", get_time() - philo->rules->start_time, philo->id, state);
+	printf("%lld %d %s\n", get_time()
+		- philo->rules->start_time, philo->id, state);
 	pthread_mutex_unlock(&philo->rules->print_mutex);
 	return (1);
 }
