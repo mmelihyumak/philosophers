@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:20:49 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/08 01:40:35 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 20:21:12 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	control(t_rules *rules, int id, int flag, int i)
 		{
 			rules->philos[i].is_dead = 1;
 			pthread_mutex_destroy(rules->death_mutex);
+			pthread_mutex_destroy(&rules->print_mutex);
 			print_state(&rules->philos[i], "is died", 1);
 			return (0);
 		}
@@ -43,6 +44,7 @@ int	control(t_rules *rules, int id, int flag, int i)
 		{
 			rules->philos[i].is_dead = 1;
 			pthread_mutex_destroy(rules->death_mutex);
+			pthread_mutex_destroy(&rules->print_mutex);
 			print_state(&rules->philos[i], "is died", 1);
 			return (0);
 		}

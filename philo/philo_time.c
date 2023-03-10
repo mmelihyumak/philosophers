@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 02:58:28 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/08 06:51:49 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 19:25:15 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	wait_philo(t_philo *philo, long long wait_time, int flag)
 {
 	while (get_time() < wait_time)
 	{
-		if (!death_control(philo->rules, philo->id, flag))
+		if (!death_control(philo->rules, philo->id, flag) || !control_eating_count(philo->rules))
 			return (0);
 		usleep(50);
 	}
@@ -37,8 +37,10 @@ int	wait_eating(t_philo *philo, long long wait_time)
 {
 	while (get_time() < wait_time)
 	{
-		philo->last_meal = get_time() - philo->rules->start_time;
+		philo->last_meal = get_time() - philo->rules->start_time ;
 		if (philo->rules->death == 1)
+			return (0);
+		if (!control_eating_count(philo->rules))
 			return (0);
 		usleep(50);
 	}
@@ -60,6 +62,8 @@ int	wait_sleeping(t_philo *philo, long long wait_time)
 	while (get_time() < wait_time)
 	{
 		if (philo->rules->death == 1)
+			return (0);
+		if (!control_eating_count(philo->rules))
 			return (0);
 		usleep(50);
 	}

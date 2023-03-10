@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:48 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/08 01:43:33 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 20:30:07 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	long long		last_meal;
 	int				id;
 	int				is_eating;
+	int				count_eat;
 	int				is_dead;
 	struct s_rules	*rules;
 }t_philo;
@@ -66,5 +67,8 @@ int			print_state(t_philo *philo, char *state, int flag);
 int			eating(t_philo *philo);
 int			launch(t_rules *rules);
 int			control(t_rules *rules, int id, int flag, int i);
+int			control_eating_count(t_rules *rules);
+int			check_all_philos(t_rules *rules);
+void		free_func(t_rules *rules);
 
 #endif

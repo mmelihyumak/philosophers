@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 00:14:06 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/07 06:49:03 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 20:37:14 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	create_philo(t_rules *rules, char **argv)
 	{
 		rules->philos[i].id = ids++;
 		rules->philos[i].is_dead = 0;
+		rules->philos[i].count_eat = 0;
 		rules->philos[i].rules = rules;
 	}
 	return (0);

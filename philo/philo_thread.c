@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 00:13:52 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/08 06:52:25 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 20:42:20 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*routine(void *vargp)
 			return (0);
 	print_state(philo, "is thinking", 0);
 	return (vargp);
-}
+} 
 
 int	create_thread(t_rules *rules)
 {
@@ -72,6 +72,7 @@ int	launch(t_rules *rules)
 	{
 		pthread_create(&rules->philos[i].thread_id, NULL, &routine,
 			(void *) &rules->philos[i]);
+		usleep(100);
 	}
 	i = -1;
 	while (++i < rules->number_of_philo)

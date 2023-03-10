@@ -6,7 +6,7 @@
 /*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/04 23:31:18 by muyumak           #+#    #+#             */
-/*   Updated: 2023/03/08 07:54:45 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/10 20:40:39 by muyumak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	if (!check_numbers(argv) || !check_zero(argv))
+	{
 		return (0);
+	}
+		
 	if (argc == 6 && ft_atoi(argv[5]) == 0)
 	{
 		printf("Invalid argument\n");
@@ -38,8 +41,8 @@ int	main(int argc, char **argv)
 		while (++i < rules->number_of_philo)
 			pthread_mutex_destroy(&rules->forks[i]);
 		pthread_mutex_destroy(rules->death_mutex);
+		free_func(rules);
 		return (0);
 	}
-	//system("leaks philo");
 	return (0);
 }
