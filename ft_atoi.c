@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muyumak <muyumak@student.42.fr>            +#+  +:+       +#+        */
+/*   By: melih <melih@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 23:35:06 by muyumak           #+#    #+#             */
-/*   Updated: 2023/02/27 23:35:27 by muyumak          ###   ########.fr       */
+/*   Updated: 2023/03/13 23:12:05 by melih            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,13 @@ int	ft_atoi(const char *str)
 	}
 	number *= sign;
 	return (number);
+}
+
+void	ft_putstr(const char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		write(1, &str[i], 1);
 }
